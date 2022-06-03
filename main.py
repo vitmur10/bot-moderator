@@ -23,26 +23,10 @@ async def ban(message: types.Message):
     if not message.reply_to_message:
         await message.reply('Ця команда має бути відповідю на повідомлення')
         return
-    try:
-        muteint = int(message.text.split()[1])
-        mutetype = message.text.split()[2]
-        comment = " ".join(message.text.split()[3:])
-    except IndexError:
-        await message.reply('Не хватает аргументов!\nПример:\n`/мут 1 ч причина`')
-        return
-    if mutetype == "ч" or mutetype == "часов" or mutetype == "час":
-        dt = datetime.now() + timedelta(hours=muteint)
-        timestamp = dt.timestamp()
-    elif mutetype == "м" or mutetype == "минут" or mutetype == "минуты":
-        dt = datetime.now() + timedelta(minutes=muteint)
-        timestamp = dt.timestamp()
-    elif mutetype == "д" or mutetype == "дней" or mutetype == "день":
-        dt = datetime.now() + timedelta(days=muteint)
-        timestamp = dt.timestamp()
-    await message.bot.ban_chat_member(message.chat.id, message.reply_to_message.from_user.id, types.ChatPermissions(False), timestamp)
-    await message.reply(
-        f' | <b>Решение было принято:</b> {name1}\n | <b>Нарушитель:</b> <a href="tg://user?id={message.reply_to_message.from_user.id}">{message.reply_to_message.from_user.first_name}</a>\n⏰ | <b>Срок наказания:</b> {muteint} {mutetype}\n | <b>Причина:</b> {comment}',
-        parse_mode='html')
+
+
+    await message.bot.ban_chat_member(message.chat.id, message.reply_to_message.from_user.id)
+    await message.reply(f'Покинув нас')
 
 #kik
 @dp.message_handler(is_admin=True, commands=['kik'], commands_prefix='/')
