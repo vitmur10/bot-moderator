@@ -20,7 +20,6 @@ dp.filters_factory.bind(IsAdmin)
 #ban
 @dp.message_handler(is_admin=True, commands=['ban'], commands_prefix='/')
 async def ban(message: types.Message):
-    name1 = message.from_user.get_mention(as_html=True)
     if not message.reply_to_message:
         await message.reply('Ця команда має бути відповідю на повідомлення')
         return
