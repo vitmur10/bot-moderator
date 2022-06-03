@@ -6,8 +6,10 @@ from datetime import datetime, timedelta
 
 
 bot = Bot(token=config.Token_bot)
+
 #logging.basicConfig(level=logging.INFO)
 dp = Dispatcher(bot)
+
 
 @dp.message_handler(content_types=['new_chat_members'])
 async def on_user_joiner(message: types.Message):
@@ -16,6 +18,7 @@ async def on_user_joiner(message: types.Message):
 
 #aктивація фільтра
 dp.filters_factory.bind(IsAdmin)
+
 
 #ban
 @dp.message_handler(is_admin=True, commands=['ban'], commands_prefix='/')
@@ -28,14 +31,13 @@ async def ban(message: types.Message):
     await message.bot.ban_chat_member(message.chat.id, message.reply_to_message.from_user.id)
     await message.reply(f'Покинув нас')
 
+
 #kik
 @dp.message_handler(is_admin=True, commands=['kik'], commands_prefix='/')
 async def kik(message: types.Message):
-    name1 = message.from_user.get_mention(as_html=True)
     if not message.reply_to_message:
         await message.reply('Ця команда має бути відповідю на повідомлення')
         return
-
 
     await message.bot.unban_chat_member(message.chat.id, message.reply_to_message.from_user.id)
     await message.reply(f'Покинув нас')
@@ -68,10 +70,13 @@ async def mute(message):
     await message.reply(
         f' | <b>Решение было принято:</b> {name1}\n | <b>Нарушитель:</b> <a href="tg://user?id={message.reply_to_message.from_user.id}">{message.reply_to_message.from_user.first_name}</a>\n⏰ | <b>Срок наказания:</b> {muteint} {mutetype}\n | <b>Причина:</b> {comment}',
         parse_mode='html')
+
+
 @dp.message_handler()
 async def filter_messages(message: types.Message):
     if 'v' in message.text:
         await message.delete()
+
 
 if __name__ =='__main__':
     executor.start_polling(dp, skip_updates=True)
