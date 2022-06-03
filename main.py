@@ -2,10 +2,11 @@ import config
 import logging
 from aiogram import Bot, Dispatcher, executor, types
 from filters import IsAdmin
-logging.basicConfig(level=logging.INFO)
 from datetime import datetime, timedelta
-bot = Bot(token=config.Token_bot)
 
+
+bot = Bot(token=config.Token_bot)
+logging.basicConfig(level=logging.INFO)
 dp = Dispatcher(bot)
 
 @dp.message_handler(content_types=['new_chat_members'])
