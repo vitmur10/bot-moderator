@@ -3,6 +3,7 @@ import config
 from aiogram import Bot, Dispatcher, executor, types
 from filters import IsAdmin
 from datetime import datetime, timedelta
+import time
 
 
 bot = Bot(token=config.Token_bot)
@@ -74,9 +75,15 @@ async def mute(message):
 
 @dp.message_handler()
 async def filter_messages(message: types.Message):
-    if 'v' in message.text:
-        await message.delete()
-
+    m2 = set(str.casefold(message.text))
+    zv = ('z', 'v', 'zv', 'vz')
+    for i in zv:
+        if set(i) == m2:
+            await message.reply(
+                f'Вийди отсюда розбійник'
+            )
+            time.sleep(10)
+            await message.delete()
 
 if __name__ =='__main__':
     executor.start_polling(dp, skip_updates=True)
