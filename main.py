@@ -82,8 +82,6 @@ async def filter_messages(message: types.Message):
             await message.reply(
                 f'Вийди отсюда розбійник'
             )
-            time.sleep(10)
-            await message.delete()
 
 if __name__ =='__main__':
     executor.start_polling(dp, skip_updates=True)
