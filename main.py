@@ -73,13 +73,13 @@ async def mute(message):
         parse_mode='html')
 
 
-@dp.message_handler()
+"""@dp.message_handler()
 async def filter_messages(message: types.Message):
     m2 = set(str.casefold(message.text))
     zv = ('z', 'v', 'zv', 'vz')
     for i in zv:
         if set(i) == m2:
-            await message.reply(f'Вийди отсюда розбійник')
+            await message.reply(f'Вийди отсюда розбійник')"""
 
 if __name__ =='__main__':
     executor.start_polling(dp, skip_updates=True)
