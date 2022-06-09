@@ -82,10 +82,10 @@ async def filter_messages(message: types.Message):
         'zv':'РУский воєний корабель іди нахуй',
         'vz': '  '
     }
-    for i in characters:
-        if set(i) == m2:
+    for key in characters:
+        if set(key) == m2:
             await message.reply(
-                characters.get(m2))
+                characters[key])
 
 
 if __name__ =='__main__':
