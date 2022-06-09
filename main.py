@@ -76,11 +76,16 @@ async def mute(message):
 @dp.message_handler()
 async def filter_messages(message: types.Message):
     m2 = set(str.casefold(message.text))
-    zv = ('z', 'v', 'zv', 'vz')
-    for i in zv:
+    characters = {
+        'z':'Вийди отсюда розбійник',
+        'v':'Пиздуйте нахуй отсюда йобаниє підараси',
+        'zv':'РУский воєний корабель іди нахуй',
+        'vz': '  '
+    }
+    for i in characters:
         if set(i) == m2:
             await message.reply(
-                f'Вийди отсюда розбійник')
+                characters.get(m2))
 
 
 if __name__ =='__main__':
