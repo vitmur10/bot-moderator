@@ -25,7 +25,7 @@ dp.filters_factory.bind(IsAdmin)
 @dp.message_handler(is_admin=True, commands=['ban'], commands_prefix='/')
 async def ban(message: types.Message):
     if not message.reply_to_message:
-        await message.reply('Ця команда має бути відповідю на повідомлення')
+        await message.reply('Ця команда має бути відповіддю на повідомлення')
         return
 
 
@@ -37,7 +37,7 @@ async def ban(message: types.Message):
 @dp.message_handler(is_admin=True, commands=['kik'], commands_prefix='/')
 async def kik(message: types.Message):
     if not message.reply_to_message:
-        await message.reply('Ця команда має бути відповідю на повідомлення')
+        await message.reply('Ця команда має бути відповіддю на повідомлення')
         return
 
     await message.bot.unban_chat_member(message.chat.id, message.reply_to_message.from_user.id)
@@ -49,27 +49,27 @@ async def kik(message: types.Message):
 async def mute(message):
     name1 = message.from_user.get_mention(as_html=True)
     if not message.reply_to_message:
-        await message.reply("Эта команда должна быть ответом на сообщение!")
+        await message.reply("Ця команда має бути відповіддю на повідомлення!")
         return
     try:
         muteint = int(message.text.split()[1])
         mutetype = message.text.split()[2]
         comment = " ".join(message.text.split()[3:])
     except IndexError:
-        await message.reply('Не хватает аргументов!\nПример:\n`/мут 1 ч причина`')
+        await message.reply('Бракує аргументів!\nПриклад:\n`/mut 1 ч причина`')
         return
-    if mutetype == "ч" or mutetype == "часов" or mutetype == "час":
+    if mutetype == "г" or mutetype == "годин" or mutetype == "година":
         dt = datetime.now() + timedelta(hours=muteint)
         timestamp = dt.timestamp()
-    elif mutetype == "м" or mutetype == "минут" or mutetype == "минуты":
+    elif mutetype == "х" or mutetype == "хвилин" or mutetype == "хвилини":
         dt = datetime.now() + timedelta(minutes=muteint)
         timestamp = dt.timestamp()
-    elif mutetype == "д" or mutetype == "дней" or mutetype == "день":
+    elif mutetype == "д" or mutetype == "днів" or mutetype == "день":
         dt = datetime.now() + timedelta(days=muteint)
         timestamp = dt.timestamp()
     await bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id, types.ChatPermissions(False),timestamp)
     await message.reply(
-        f' | <b>Решение было принято:</b> {name1}\n | <b>Нарушитель:</b> <a href="tg://user?id={message.reply_to_message.from_user.id}">{message.reply_to_message.from_user.first_name}</a>\n⏰ | <b>Срок наказания:</b> {muteint} {mutetype}\n | <b>Причина:</b> {comment}',
+        f' | <b>Рішення було прийняте:</b> {name1}\n | <b>Порушник:</b> <a href="tg://user?id={message.reply_to_message.from_user.id}">{message.reply_to_message.from_user.first_name}</a>\n⏰ | <b>Термін покарання:</b> {muteint} {mutetype}\n | <b>Причина:</b> {comment}',
         parse_mode='html')
 
 
