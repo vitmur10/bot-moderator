@@ -73,7 +73,7 @@ async def mute(message):
         parse_mode='html')
 
 
-@dp.message_handler(content_types=['texr'])
+@dp.message_handler(content_types=['text'])
 async def filter_messages(message: types.Message):
     m2 = set(str.casefold(message.text))
     characters = {
