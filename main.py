@@ -1,13 +1,12 @@
 import config
-#import logging
 from aiogram import Bot, Dispatcher, executor, types
 from filters import IsAdmin
 from datetime import datetime, timedelta
-import time
+import random
 
 
 bot = Bot(token=config.Token_bot)
-
+owm = config.owm
 #logging.basicConfig(level=logging.INFO)
 dp = Dispatcher(bot)
 
@@ -56,7 +55,7 @@ async def mute(message):
         mutetype = message.text.split()[2]
         comment = " ".join(message.text.split()[3:])
     except IndexError:
-        await message.reply('Бракує аргументів!\nПриклад:\n`/mut 1 ч причина`')
+        await message.reply('Бракує аргументів!\nПриклад:\n`/mut 1 д причина`')
         return
     if mutetype == "г" or mutetype == "годин" or mutetype == "година":
         dt = datetime.now() + timedelta(hours=muteint)
@@ -67,7 +66,7 @@ async def mute(message):
     elif mutetype == "д" or mutetype == "днів" or mutetype == "день":
         dt = datetime.now() + timedelta(days=muteint)
         timestamp = dt.timestamp()
-    await bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id, types.ChatPermissions(False),timestamp)
+    await bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id, types.ChatPermissions(False), timestamp)
     await message.reply(
         f' | <b>Рішення було прийняте:</b> {name1}\n | <b>Порушник:</b> <a href="tg://user?id={message.reply_to_message.from_user.id}">{message.reply_to_message.from_user.first_name}</a>\n⏰ | <b>Термін покарання:</b> {muteint} {mutetype}\n | <b>Причина:</b> {comment}',
         parse_mode='html')
@@ -86,6 +85,54 @@ async def filter_messages(message: types.Message):
             await message.reply(
                 characters[key])
 
+a = ['Відпочинь', 'Все буде добре']
+b = ['У тебе дуже гарна посмішка', 'Не думай про погане', 'Все буде добре']
+c = ['У тебе все вийде', 'Все буде добре']
+
+
+@dp.message_handler(commands=['start'])
+async def start(message: types.Message):
+    await message.reply('Привіт')
+
+
+@dp.message_handler(content_types=['text'])
+async def support(message: types.Message):
+    x = {
+
+        'Я втомився': a[random.randrange(0, len(a))],
+        'Мені сумно': b[random.randrange(0, len(b))],
+        'Я більше не можу': c[random.randrange(0, len(c))],
+        'Я втомилася': a[random.randrange(0, len(a))]
+    }
+    for key in x:
+        if message.text == key:
+            await message.answer(x[key])
+
+def gnoz(city, m, message: types.Message):
+    if len(m) > 6:
+        try:
+            mgr = owm.weather_manager()
+            observation = mgr.weather_at_place(city)
+            w = observation.weather
+            temp = w.temperature('celsius')['temp']
+            temp_max = w.temperature('celsius')['temp_max']
+            temp_min = w.temperature('celsius')['temp_min']
+            answre = f"""У {str.capitalize(city)} у даний момент {w.detailed_status}\nТемпература зараз {round(temp)}°С\nМакс.{round(temp_max)}°С\nМін.{round(temp_min)}°С"""
+            await message.answer(message.chat.id, answre)
+        except:
+            await message.answer('Щось не так із містом \n'
+                                              'Як правильно:\n'
+                                              '(Погода місто)')
+
+
+@dp.message_handler(content_types=['text'])
+async def prognoz(message: types.Message):
+    m = str(message.text)
+    city = m[7:]
+    if 'погода' in m:
+        gnoz(city, m)
+    elif 'Погода' in m:
+        gnoz(city, m)
 
 
 if __name__ =='__main__':
