@@ -75,39 +75,28 @@ async def mute(message):
 @dp.message_handler(content_types=['text'])
 async def filter_messages(message: types.Message):
     m2 = set(str.casefold(message.text))
+    a = ['Відпочинь', 'Все буде добре']
+    b = ['У тебе дуже гарна посмішка', 'Не думай про погане', 'Все буде добре']
+    c = ['У тебе все вийде', 'Все буде добре']
     characters = {
         'z': 'Вийди отсюда розбійник🧏🧏🧏',
         'v': 'Пиздуйте нахуй отсюда йобаниє підараси👨‍🦲👨‍🦲👨‍🦲',
-        'vz': 'Пиздець російській федерації⚰️⚰️⚰️'
+        'vz': 'Пиздець російській федерації⚰️⚰️⚰️',
+        'Я втомився': a[random.randrange(0, len(a))],
+        'Мені сумно': b[random.randrange(0, len(b))],
+        'Я більше не можу': c[random.randrange(0, len(c))],
+        'Я втомилася': a[random.randrange(0, len(a))]
     }
     for key in characters:
         if set(key) == m2:
             await message.reply(
                 characters[key])
 
-a = ['Відпочинь', 'Все буде добре']
-b = ['У тебе дуже гарна посмішка', 'Не думай про погане', 'Все буде добре']
-c = ['У тебе все вийде', 'Все буде добре']
 
 
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
     await message.reply('Привіт')
-
-
-@dp.message_handler(content_types=['text'])
-async def support(message: types.Message):
-    x = {
-
-        'Я втомився': a[random.randrange(0, len(a))],
-        'Мені сумно': b[random.randrange(0, len(b))],
-        'Я більше не можу': c[random.randrange(0, len(c))],
-        'Я втомилася': a[random.randrange(0, len(a))]
-    }
-    for key in x:
-        if message.text == key:
-            await message.answer(x[key])
-
 
 
 if __name__ =='__main__':
