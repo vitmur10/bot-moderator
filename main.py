@@ -74,7 +74,6 @@ async def mute(message):
 
 @dp.message_handler(content_types=['text'])
 async def filter_messages(message: types.Message):
-    m2 = set(str.casefold(message.text))
     a = ['Відпочинь', 'Все буде добре']
     b = ['У тебе дуже гарна посмішка', 'Не думай про погане', 'Все буде добре']
     c = ['У тебе все вийде', 'Все буде добре']
