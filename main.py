@@ -108,31 +108,6 @@ async def support(message: types.Message):
         if message.text == key:
             await message.answer(x[key])
 
-def gnoz(city, m, message: types.Message):
-    if len(m) > 6:
-        try:
-            mgr = owm.weather_manager()
-            observation = mgr.weather_at_place(city)
-            w = observation.weather
-            temp = w.temperature('celsius')['temp']
-            temp_max = w.temperature('celsius')['temp_max']
-            temp_min = w.temperature('celsius')['temp_min']
-            answre = f"""У {str.capitalize(city)} у даний момент {w.detailed_status}\nТемпература зараз {round(temp)}°С\nМакс.{round(temp_max)}°С\nМін.{round(temp_min)}°С"""
-            await message.answer(message.chat.id, answre)
-        except:
-            await message.answer('Щось не так із містом \n'
-                                              'Як правильно:\n'
-                                              '(Погода місто)')
-
-
-@dp.message_handler(content_types=['text'])
-async def prognoz(message: types.Message):
-    m = str(message.text)
-    city = m[7:]
-    if 'погода' in m:
-        gnoz(city, m)
-    elif 'Погода' in m:
-        gnoz(city, m)
 
 
 if __name__ =='__main__':
