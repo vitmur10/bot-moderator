@@ -4,10 +4,9 @@ from filters import IsAdmin
 from datetime import datetime, timedelta
 import random
 
-
 bot = Bot(token=config.Token_bot)
 owm = config.owm
-#logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
 dp = Dispatcher(bot)
 
 
@@ -16,65 +15,56 @@ async def on_user_joiner(message: types.Message):
     await message.delete()
 
 
-#aктивація фільтра
+# aктивація фільтра
 dp.filters_factory.bind(IsAdmin)
 
 
-#ban
+# ban
 @dp.message_handler(is_admin=True, commands=['ban'], commands_prefix='/')
 async def ban(message: types.Message):
     if not message.reply_to_message:
         await message.reply('Ця команда має бути відповіддю на повідомлення')
         return
 
-
     await message.bot.ban_chat_member(message.chat.id, message.reply_to_message.from_user.id)
     await message.reply(f'Покинув нас')
 
 
-#kik
-@dp.message_handler(is_admin=True, commands=['kik'], commands_prefix='/')
+# kik
+@dp.message_handler(is_admin=True, content_types=["реклама", "прон", "язык"])
 async def kik(message: types.Message):
-    if not message.reply_to_message:
-        await message.reply('Ця команда має бути відповіддю на повідомлення')
-        return
+        if not message.reply_to_message:
+            await message.reply('Ця команда має бути відповіддю на повідомлення')
+            return
+        await message.bot.unban_chat_member(message.chat.id, message.reply_to_message.from_user.id)
+        await message.reply(f'Покинув нас', message.reply_to_message.from_user.id)
 
-    await message.bot.unban_chat_member(message.chat.id, message.reply_to_message.from_user.id)
-    await message.reply(f'Покинув нас')
 
-
-#Mute
-@dp.message_handler(is_admin=True, commands=['mut'], commands_prefix='/')
+# Mute
+@dp.message_handler(is_admin=True, content_types=['text'])
 async def mute(message):
     name1 = message.from_user.get_mention(as_html=True)
+    muteint = {"флуд": 6,
+               "накрутка": 12,
+               "эпи": 48,
+               "пинг": 2,
+               "попрошайка": 24
+               }
     if not message.reply_to_message:
         await message.reply("Ця команда має бути відповіддю на повідомлення!")
         return
-    try:
-        muteint = int(message.text.split()[1])
-        mutetype = message.text.split()[2]
-        comment = " ".join(message.text.split()[3:])
-    except IndexError:
-        await message.reply('Бракує аргументів!\nПриклад:\n`/mut 1 д причина`')
-        return
-    if mutetype == "г" or mutetype == "годин" or mutetype == "година":
-        dt = datetime.now() + timedelta(hours=muteint)
-        timestamp = dt.timestamp()
-    elif mutetype == "х" or mutetype == "хвилин" or mutetype == "хвилини":
-        dt = datetime.now() + timedelta(minutes=muteint)
-        timestamp = dt.timestamp()
-    elif mutetype == "д" or mutetype == "днів" or mutetype == "день":
-        dt = datetime.now() + timedelta(days=muteint)
-        timestamp = dt.timestamp()
-    await bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id, types.ChatPermissions(False), timestamp)
-    await message.reply(
-        f' | <b>Рішення було прийняте:</b> {name1}\n | <b>Порушник:</b> <a href="tg://user?id={message.reply_to_message.from_user.id}">{message.reply_to_message.from_user.first_name}</a>\n⏰ | <b>Термін покарання:</b> {muteint} {mutetype}\n | <b>Причина:</b> {comment}',
-        parse_mode='html')
+    for key in muteint:
+        if key == message.text:
+            dt = datetime.now() + timedelta(hours=int(muteint[key]))
+            timestamp: float = dt.timestamp()
+            await bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id, types.ChatPermissions(False), timestamp)
+            await message.reply(
+                f' | <b>Рішення було прийняте:</b> {name1}\n | <b>Порушник:</b> <a href="tg://user?id={message.reply_to_message.from_user.id}">{message.reply_to_message.from_user.first_name}</a>\n⏰ | <b>Термін покарання:</b> {muteint[key]} годин\n | <b>Причина:</b> {message.text}',
+                parse_mode='html')
 
 
 @dp.message_handler(content_types=['text'])
 async def filter_messages(message: types.Message):
-
     a = ['Відпочинь', 'Все буде добре']
     b = ['У тебе дуже гарна посмішка', 'Не думай про погане', 'Все буде добре']
     c = ['У тебе все вийде', 'Все буде добре']
@@ -96,11 +86,10 @@ async def filter_messages(message: types.Message):
                 characters[key])
 
 
-
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
     await message.reply('Привіт')
 
 
-if __name__ =='__main__':
+if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
